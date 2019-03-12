@@ -25,7 +25,6 @@ public class Spu {
     private Boolean saleable;// 是否上架
     @JsonIgnore
     private Boolean valid;// 是否有效，逻辑删除用
-    @JsonIgnore
     private Date createTime;// 创建时间
     @JsonIgnore
     private Date lastUpdateTime;// 最后修改时间
