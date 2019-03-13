@@ -11,6 +11,7 @@ zuul:
   prefix: /api
   routes:
     item-service: /item/** # 将商品微服务映射到/item/**
+    search-service: /search/**
     upload-service:
       path: /upload/**
       service: upload-service
@@ -33,6 +34,7 @@ ly:
     allowedOrigins:
       - http://manage.leyou.com
       - http://image.leyou.com
+      - http://www.leyou.com
     allowCredentials: true
     allowedMethods:
       - GET

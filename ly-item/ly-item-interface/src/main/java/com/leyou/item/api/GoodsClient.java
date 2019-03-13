@@ -14,7 +14,7 @@ import java.util.List;
 @FeignClient("item-service")
 public interface GoodsClient {
 
-    @GetMapping("/spu/page")
+    @GetMapping("spu/page")
     PageResult<Spu> querySpuByPage(
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "rows", defaultValue = "5") Integer rows,
@@ -22,9 +22,9 @@ public interface GoodsClient {
             @RequestParam(value = "key", required = false) String key
     );
 
-    @GetMapping("/spu/detail/{spuId}")
+    @GetMapping("spu/detail/{spuId}")
     SpuDetail queryDetailBySpuId(@PathVariable("spuId") Long spuId);
 
-    @GetMapping("sku/list")
+    @GetMapping("/sku/list")
     List<Sku> querySkuListBySpuId(@RequestParam("id") Long spuId);
 }

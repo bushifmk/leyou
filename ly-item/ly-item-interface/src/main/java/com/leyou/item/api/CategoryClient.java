@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(value = "item-service",path = "category")
+@FeignClient(value = "item-service",path = "/category")
 public interface CategoryClient {
-    @GetMapping("list/ids")
+    @GetMapping("/list/ids")
     List<Category> queryByIdList(@RequestParam("ids") List<Long> idList);
 }

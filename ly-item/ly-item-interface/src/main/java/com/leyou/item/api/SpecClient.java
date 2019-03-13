@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient("item-service")
+@FeignClient(value = "item-service",path = "spec")
 public interface SpecClient {
-    @GetMapping("spec/params")
+    @GetMapping("params")
     List<SpecParam> queryParam(
             @RequestParam(value = "gid", required = false) Long gid,
             @RequestParam(value = "cid", required = false) Long cid,
