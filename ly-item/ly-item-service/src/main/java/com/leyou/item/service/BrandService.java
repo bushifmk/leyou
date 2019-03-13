@@ -11,6 +11,7 @@ import com.leyou.item.pojo.Category;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -93,6 +94,14 @@ public class BrandService {
 
     public List<Brand> queryBrandByCid(Long cid) {
         List<Brand> list= brandMapper.queryByCategoryId(cid);
+        if(CollectionUtils.isEmpty(list)){
+            throw new LyException(ExceptionEnum.BRAND_NOT_FOUND);
+        }
+        return list;
+    }
+
+    public List<Brand> queryByIds(List<Long> idList) {
+        List<Brand> list = brandMapper.selectByIdList(idList);
         if(CollectionUtils.isEmpty(list)){
             throw new LyException(ExceptionEnum.BRAND_NOT_FOUND);
         }
