@@ -55,4 +55,9 @@ public class GoodsController {
         this.goodsService.updateGoods(spu);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+    @GetMapping("spu/{id}")
+    public ResponseEntity<Spu> querySpuById(@PathVariable("id") Long spuId){
+        return ResponseEntity.ok(goodsService.querySpuById(spuId));
+    }
+
 }

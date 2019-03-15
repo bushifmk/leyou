@@ -32,4 +32,9 @@ public class SpecController {
     ){
         return ResponseEntity.ok(specService.queryParams(gid,cid,searching));
     }
+    @GetMapping("list")
+    public ResponseEntity<List<SpecGroup>> queryListByCid(@RequestParam("cid") Long cid){
+        return ResponseEntity.ok(specService.queryListByCid(cid));
+    }
+
 }

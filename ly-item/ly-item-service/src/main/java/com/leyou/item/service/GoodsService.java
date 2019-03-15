@@ -199,4 +199,14 @@ public class GoodsService {
         }
         saveSkuAndStock(spu);
     }
+
+    public Spu querySpuById(Long spuId) {
+        Spu spu = spuMapper.selectByPrimaryKey(spuId);
+        if (spu == null) {
+            throw new LyException(ExceptionEnum.GOODS_NOT_FOUND);
+        }
+        spu.setSpuDetail(queryDetailById(spuId));
+        spu.setSkus(querySkuListBySpuId(spuId));
+        return spu;
+    }
 }

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author bushifeng
@@ -50,5 +52,15 @@ public class SpecService {
             throw new LyException(ExceptionEnum.SPEC_PARAM_NOT_FOUND);
         }
         return list;
+    }
+
+    public List<SpecGroup> queryListByCid(Long cid) {
+        List<SpecGroup> specGroups = queryGroupCid(cid);
+        List<SpecParam> specParams = queryParams(null, cid, null);
+        Map<Long, List<SpecParam>> map = specParams.stream().collect(Collectors.groupingBy(SpecParam::getGroupId));
+        for (SpecGroup specGroup : specGroups) {
+            specGroup.setParams(map.get(specGroup.getId()));
+        }
+        return specGroups;
     }
 }

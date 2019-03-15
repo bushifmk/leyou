@@ -16,6 +16,7 @@ import com.leyou.pojo.SearchRequest;
 import com.leyou.pojo.SearchResult;
 import com.leyou.repository.GoodsRepository;
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -151,7 +152,7 @@ public class SearchService {
         int size = request.getSize();
         queryBuilder.withPageable(PageRequest.of(page, size));
         //查询条件
-        QueryBuilder basicQuery = QueryBuilders.matchQuery("all", key);
+        QueryBuilder basicQuery = buildBasicQuery(request);
         queryBuilder.withQuery(basicQuery);
         //添加聚合条件
         //对分类聚合
@@ -182,6 +183,20 @@ public class SearchService {
         }
         //封装并返回
         return new SearchResult(total, totalPages, list, filterList);
+    }
+
+    private QueryBuilder buildBasicQuery(SearchRequest request) {
+        BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
+        queryBuilder.must(QueryBuilders.matchQuery("all",request.getKey()));
+        Map<String, String> map = request.getFilter();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            String key = entry.getKey();
+            if(!"brandId".equals(key) && !"cid3".equals(key)){
+                key="specs."+key;
+            }
+            queryBuilder.filter(QueryBuilders.termQuery(key,entry.getValue()));
+        }
+        return queryBuilder;
     }
 
     private void handleSpecAgg(Long cid, QueryBuilder basicQuery, List<Map<String, Object>> filterList) {
@@ -224,7 +239,7 @@ public class SearchService {
                 .collect(Collectors.toList());
         List<Brand> brands = brandClient.queryByIdList(idList);
         Map<String, Object> map = new HashMap<>();
-        map.put("k", "品牌");
+        map.put("k", "brandId");
         map.put("options", brands);
         filterList.add(map);
         return idList;
@@ -235,7 +250,7 @@ public class SearchService {
                 .collect(Collectors.toList());
         List<Category> categories = categoryClient.queryByIdList(idList);
         Map<String, Object> map = new HashMap<>();
-        map.put("k", "分类");
+        map.put("k", "cid3");
         map.put("options", categories);
         filterList.add(map);
         return idList;
