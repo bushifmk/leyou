@@ -68,11 +68,7 @@ public class PageService {
     public void createItemHtml(Long spuId){
         Context context = new Context();
         context.setVariables(loadItemData(spuId));
-        File dir = new File("C:\\nginx-1.14.0\\nginx-1.14.0\\nginx-1.14.0\\html\\item");
-        if(!dir.exists()){
-            dir.mkdirs();
-        }
-        File file = new File(dir, spuId + ".html");
+        File file = getFilePath(spuId);
         try (PrintWriter writer=new PrintWriter(file,"UTF-8")){
             templateEngine.process("item",context,writer);
         }catch (IOException e){
@@ -82,12 +78,19 @@ public class PageService {
 
     }
 
+    private File getFilePath(Long spuId) {
+        File dir = new File("C:\\nginx-1.14.0\\nginx-1.14.0\\nginx-1.14.0\\html\\item");
+        if(!dir.exists()){
+            dir.mkdirs();
+        }
+        return new File(dir, spuId + ".html");
+    }
 
 
-
-
-
-
-
-
+    public void deleteItemHtml(Long id) {
+        File file = getFilePath(id);
+        if(file.exists()){
+            file.delete();
+        }
+    }
 }

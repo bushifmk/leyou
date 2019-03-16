@@ -12,6 +12,7 @@ import com.leyou.item.mapper.SpuMapper;
 import com.leyou.item.mapper.StockMapper;
 import com.leyou.item.pojo.*;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +48,8 @@ public class GoodsService {
 
     @Autowired
     private StockMapper stockMapper;
+    @Autowired
+    private AmqpTemplate amqpTemplate;
 
     public PageResult<Spu> querySpuByPage(Integer page, Integer rows, String key, Boolean saleable) {
         // 1 分页
@@ -143,6 +146,8 @@ public class GoodsService {
         if(count!=1){
             throw new LyException(ExceptionEnum.GOODS_EDIT_ERROR);
         }
+        String routingKey=saleable ? "item.up" : "item.down";
+        amqpTemplate.convertAndSend(routingKey,spu.getId());
     }
 
     public SpuDetail queryDetailById(Long id) {

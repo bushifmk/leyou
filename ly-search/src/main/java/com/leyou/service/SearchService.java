@@ -34,6 +34,7 @@ import org.springframework.data.elasticsearch.core.aggregation.AggregatedPage;
 import org.springframework.data.elasticsearch.core.query.FetchSourceFilter;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -65,7 +66,9 @@ public class SearchService {
                 .stream().map(Category::getName).collect(Collectors.joining(","));
         Brand brand = brandClient.queryById(spu.getBrandId());
         String all = spu.getTitle() + categoryNames + brand.getName();
-        List<Sku> skuList = goodsClient.querySkuListBySpuId(spu.getId());
+
+        List<Sku> skuList = CollectionUtils.isEmpty(spu.getSkus()) ? goodsClient.querySkuListBySpuId(spu.getId()) : spu.getSkus();
+
         List<Map<String, Object>> skuMap = new ArrayList<>();
         for (Sku sku : skuList) {
             Map<String, Object> map = new HashMap<>();
@@ -78,7 +81,9 @@ public class SearchService {
         Set<Long> price = skuList.stream().map(Sku::getPrice).collect(Collectors.toSet());
         Map<String, Object> specs = new HashMap<>();
         List<SpecParam> specParams = specClient.queryParam(null, spu.getCid3(), true);
-        SpuDetail spuDetail = goodsClient.queryDetailBySpuId(spu.getId());
+
+        SpuDetail spuDetail =spu.getSpuDetail()==null ? goodsClient.queryDetailBySpuId(spu.getId()) : spu.getSpuDetail();
+
         Map<Long, Object> genericSpec = JsonUtils.toMap(spuDetail.getGenericSpec(), Long.class, Object.class);
         Map<Long, List<String>> specialSpec = JsonUtils.nativeRead(spuDetail.getSpecialSpec(), new TypeReference<Map<Long, List<String>>>() {
         });
@@ -254,5 +259,15 @@ public class SearchService {
         map.put("options", categories);
         filterList.add(map);
         return idList;
+    }
+
+    public void createIndex(Long id) {
+        Spu spu = goodsClient.querySpuById(id);
+        Goods goods = buildGoods(spu);
+        repository.save(goods);
+    }
+
+    public void deleteIndex(Long id) {
+        repository.deleteById(id);
     }
 }
