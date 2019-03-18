@@ -12,11 +12,8 @@ zuul:
   routes:
     item-service: /item/** # 将商品微服务映射到/item/**
     search-service: /search/**
-    upload-service:
-      path: /upload/**
-      service: upload-service
-      strip-prefix: false
-  retryable: true
+    upload-service: /upload/**
+    user-service: /user/**
 hystrix:
   command:
     default:

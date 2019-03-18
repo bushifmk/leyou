@@ -29,6 +29,9 @@ public enum  ExceptionEnum {
     GOODS_STOCK_NOT_FOND(404,"商品库存找不到"),
     GOODS_ID_CANNOT_BE_NULL(500,"id不能为空"),
     GOODS_UPDATE_ERROR(500,"修改错误"),
+    SEND_MSG_ERROR(500,"短信发送失败"),
+    INVALID_PARAM_ERROR(400,"请求参数有误"),
+    INSERT_DATA_ERROR(500,"注册失败"),
     ;
     private int status;
     private String message;
