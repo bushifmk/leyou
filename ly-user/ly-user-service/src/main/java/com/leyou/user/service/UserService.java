@@ -75,4 +75,18 @@ public class UserService {
             throw new LyException(ExceptionEnum.INSERT_DATA_ERROR);
         }
     }
+
+    public User queryByUsernameAndPassword(String username, String password) {
+        User u = new User();
+        u.setUsername(username);
+        User user = userMapper.selectOne(u);
+        if(user==null){
+            throw new LyException(ExceptionEnum.INVALID_PARAM_ERROR);
+        }
+        String pw = CodecUtils.md5Hex(password, user.getSalt());
+        if(!StringUtils.equals(pw,user.getPassword())){
+            throw new LyException(ExceptionEnum.INVALID_PARAM_ERROR);
+        }
+        return user;
+    }
 }
