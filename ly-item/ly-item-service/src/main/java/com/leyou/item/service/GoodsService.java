@@ -167,6 +167,11 @@ public class GoodsService {
         if(CollectionUtils.isEmpty(skuList)){
             throw new LyException(ExceptionEnum.GOODS_SKU_NOT_FOND);
         }
+        fillSkuWithStock(skuList);
+        return skuList;
+    }
+
+    private void fillSkuWithStock(List<Sku> skuList) {
         List<Long> ids = skuList.stream().map(Sku::getId).collect(Collectors.toList());
         List<Stock> stockList = stockMapper.selectByIdList(ids);
         if(CollectionUtils.isEmpty(stockList)){
@@ -174,7 +179,6 @@ public class GoodsService {
         }
         Map<Long, Integer> stockMap = stockList.stream().collect(Collectors.toMap(Stock::getSkuId, Stock::getStock));
         skuList.forEach(s->s.setStock(stockMap.get(s.getId())));
-        return skuList;
     }
 
     @Transactional
@@ -213,5 +217,14 @@ public class GoodsService {
         spu.setSpuDetail(queryDetailById(spuId));
         spu.setSkus(querySkuListBySpuId(spuId));
         return spu;
+    }
+
+    public List<Sku> querySkuByIds(List<Long> ids) {
+        List<Sku> list = skuMapper.selectByIdList(ids);
+        if(CollectionUtils.isEmpty(list)){
+            throw new LyException(ExceptionEnum.GOODS_STOCK_FOND);
+        }
+        fillSkuWithStock(list);
+        return list;
     }
 }

@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public enum  ExceptionEnum {
     PRICE_CANNOT_BE_NULL(400, "价格不能为空！"),
+    GOODS_STOCK_FOND(404,"商品没找到"),
     CATEGORY_NOT_FOND(404,"找不到类型"),
     INTERNAL_SERVER_ERROR(204,"新增品牌失败"),
     INVALID_FILE_TYPE(404,"图片类型错误"),
@@ -32,6 +33,7 @@ public enum  ExceptionEnum {
     SEND_MSG_ERROR(500,"短信发送失败"),
     INVALID_PARAM_ERROR(400,"请求参数有误"),
     INSERT_DATA_ERROR(500,"注册失败"),
+    INVALID_LOGIN_TOKEN(400,"无效的登陆状态"),
     ;
     private int status;
     private String message;

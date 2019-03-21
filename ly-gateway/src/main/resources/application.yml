@@ -16,6 +16,7 @@ zuul:
     user-service: /user/**
     auth-service: /auth/**
   sensitive-headers:
+  add-host-header: true
 hystrix:
   command:
     default:
@@ -45,3 +46,14 @@ ly:
     filterPath: /**
     allowedHeaders:
       - "*"
+  jwt:
+    pubKeyPath: C:/aa/id_rsa.pub # 公钥地址
+    cookieName: LY_TOKEN
+  filter:
+    allowPaths:
+      - /api/auth
+      - /api/search
+      - /api/user/register
+      - /api/user/check
+      - /api/user/code
+      - /api/item
