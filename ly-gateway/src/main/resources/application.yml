@@ -15,6 +15,7 @@ zuul:
     upload-service: /upload/**
     user-service: /user/**
     auth-service: /auth/**
+    cart-service: /cart/**
   sensitive-headers:
   add-host-header: true
 hystrix:
