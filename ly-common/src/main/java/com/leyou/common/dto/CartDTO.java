@@ -1,4 +1,4 @@
-package com.leyou.order.pojo;
+package com.leyou.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

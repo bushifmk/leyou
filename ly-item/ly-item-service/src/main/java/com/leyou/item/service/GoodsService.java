@@ -2,6 +2,7 @@ package com.leyou.item.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.leyou.common.dto.CartDTO;
 import com.leyou.common.enums.ExceptionEnum;
 import com.leyou.common.exceptions.LyException;
 import com.leyou.common.vo.PageResult;
@@ -227,4 +228,25 @@ public class GoodsService {
         fillSkuWithStock(list);
         return list;
     }
+
+    @Transactional
+    public void decreaseStock(List<CartDTO> cartDTOS) {
+        for (CartDTO cartDTO : cartDTOS) {
+            int count= stockMapper.decreaseStock(cartDTO.getSkuId(),cartDTO.getNum());
+            if(count!=1){
+                throw new LyException(ExceptionEnum.STOCK_NOT_FOUND);
+            }
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+

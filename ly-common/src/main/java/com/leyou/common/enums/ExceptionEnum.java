@@ -33,6 +33,12 @@ public enum  ExceptionEnum {
     INVALID_LOGIN_TOKEN(400,"无效的登陆状态"),
     FORBBIDEN(403,"禁止访问"),
     CART_NOT_FOUND(404,"购物车为空"),
+    STOCK_NOT_FOUND(500,"库存不足"),
+    ORDER_NOT_FOUND(404,"订单未找到"),
+    WX_PAY_ORDER_FAIL(500,"微信下单失败"),
+    ORDER_STATUS_ERROR(500,"订单状态异常"),
+    INVALID_ORDER_PARAM(500,"金额不对"),
+    UPDATE_ORDER_STATUS_ERROR(500,"订单状态错误"),
     ;
     private int status;
     private String message;
