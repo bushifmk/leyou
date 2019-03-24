@@ -19,16 +19,14 @@ import com.leyou.user.client.AddressClient;
 import com.leyou.user.pojo.AddressDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -54,6 +52,8 @@ public class OrderService {
     private GoodsClient goodsClient;
     @Autowired
     private PayHelper payHelper;
+    @Autowired
+    private AmqpTemplate amqpTemplate;
     @Transactional
     public Long createOrder(OrderDTO orderDTO) {
         Order order = new Order();
@@ -107,6 +107,9 @@ public class OrderService {
             throw new LyException(ExceptionEnum.INSERT_DATA_ERROR);
         }
         goodsClient.decreaseStock(carts);
+        HashMap<Long, List<Long>> map = new HashMap<>();
+        map.put(user.getId(), idList);
+        amqpTemplate.convertAndSend("ly.order.exchange","order.verify.code",map);
         return orderId;
     }
 
@@ -194,6 +197,7 @@ public class OrderService {
         }
 
         // 如果未支付,但其实不一定是未支付,必须去微信查询支付状态
-        return payHelper.queryPayState(orderId).getValue();
+        int value = payHelper.queryPayState(orderId).getValue();
+        return value;
     }
 }
