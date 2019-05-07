@@ -23,6 +23,7 @@ public class AddressController {
      */
     @GetMapping("{id}")
     public ResponseEntity<AddressDTO> queryAddressById(@PathVariable("id") Long id){
+        System.out.println("niho");
         return ResponseEntity.ok(addressService.queryAddressById(id));
     }
 }
